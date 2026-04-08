@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>選單</title>
+<style>
+body {
+    font-family: sans-serif; /* 設置字體為 sans-serif */
+    margin: 0; /* 去除頁面邊距 */
+    padding: 0; /* 去除內容填充 */
+    background-color: #D9D9D9; /* 設置背景顏色為淺灰色 */
+}
+
+.container {
+    display: flex; /* 使用彈性盒模型，將子元素排列為一列 */
+    flex-direction: column; /* 將子元素按垂直方向排列 */
+    align-items: center; /* 在水平方向上居中對齊子元素 */
+    justify-content: center; /* 在垂直方向上居中對齊子元素 */
+    height: 100vh; /* 設置容器高度為視窗高度的100% */
+    width: 100%; /* 設置容器寬度為視窗寬度的100% */
+    background-color: #D9D9D9; /* 設置背景顏色為淺灰色 */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* 添加陰影效果 */
+}
+
+.button-container {
+    display: flex; /* 使用彈性盒模型，將子元素排列為一列 */
+    flex-direction: column; /* 將子元素按垂直方向排列 */
+    align-items: center; /* 在水平方向上居中對齊子元素 */
+    justify-content: center; /* 在垂直方向上居中對齊子元素 */
+    margin-top: 40px; /* 上外邊距為 40px */
+}
+
+input[type="submit"] {
+    background-color: black; /* 設置按鈕背景顏色為黑色 */
+    color: #ffe600; /* 設置按鈕文字顏色為淺黃色 */
+    border: none; /* 去除按鈕邊框 */
+    border-radius: 10px; /* 設置按鈕圓角 */
+    font-size: 1.1rem; /* 設置文字大小 */
+    padding: 0.5rem; /* 設置內間距 */
+    cursor: pointer; /* 將鼠標指針設置為手型 */
+    width: 250px; /* 設置按鈕寬度 */
+    margin-bottom: 20px; /* 下外邊距為 20px */
+}
+
+input[type="submit"]:hover {
+    background-color: #ffe600; /* 滑鼠懸停時，設置按鈕背景顏色為淺黃色 */
+    color: black; /* 滑鼠懸停時，設置按鈕文字顏色為黑色 */
+}
+
+img {
+    width: 150px; /* 設置圖片寬度為 150px */
+    margin-bottom: 2rem; /* 下外邊距為 2rem */
+}
+
+</style>
+</head>
+<body>
+    <div class="container">
+        
+        <!-- 按鈕容器 -->
+        <div class="button-container">
+            <!-- 第一個按鈕，點擊後跳轉到 /frontpage1 頁面 -->
+            <form action="/frontpage1" method="get">
+                <input type="submit" value="開啟賽事">
+            </form>
+            
+            <!-- 第二個按鈕，點擊後跳轉到 /historydata 頁面 -->
+            <form action="/historydata" method="get">
+                <input type="submit" value="歷史數據">
+            </form>
+            
+            <!-- 第三個按鈕，點擊後跳轉到 /backstage 頁面 -->
+            <form action="/backstage" method="get">
+                <input type="submit" value="設備設定">
+            </form>
+        </div>
+    </div>    
+</body>
+</html>

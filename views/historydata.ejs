@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歷史數據</title>
+    <style>
+        /* 背景顏色設定 */
+        body {
+            background-color: #E7E6E6;
+        }
+
+        /* 導航欄樣式 */
+        .navbar {
+            overflow: hidden;
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            padding: 14px 20px;
+            text-decoration: none;
+            color: yellow;
+            background-color: black;
+            border-radius: 25px;
+        }
+
+        .navbar a:hover {
+            background-color: yellow;
+            color: black;
+        }
+
+        /* 圖片樣式 */
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* 表格容器樣式 */
+        .table-container {
+            position: absolute;
+            top: 150px;
+            left: 47%;
+            transform: translateX(-50%);
+        }
+
+        /* 表格樣式 */
+        table {
+            border-collapse: collapse;
+            width: 500px;
+            margin: 0;
+        }
+
+        /* 表頭樣式 */
+        th {
+            padding: 8px;
+            text-align: center;
+            font-size: 20px;
+            font-family: "Noto Sans TC", Arial, sans-serif;
+            font-weight: normal;
+        }
+
+        /* 不同表頭的背景顏色設定 */
+        th:nth-child(1) {
+            background-color: #00B0F0;
+            color: white;
+        }
+
+        th:nth-child(2) {
+            background-color: #C55A11;
+            color: white;
+        }
+
+        th:nth-child(3) {
+            background-color: #4472C4;
+            color: white;
+        }
+
+        th:nth-child(4) {
+            background-color: #0070C0;
+            color: white;
+        }
+
+        th:nth-child(5) {
+            width: 7%;
+        }
+
+        /* 單元格樣式 */
+        td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        /* 特定單元格樣式 */
+        td:nth-child(5) {
+            border: none;
+        }
+
+        /* 按鈕容器樣式 */
+        .button-container {
+            display: flex;
+            flex-direction: center;
+            align-items: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+
+        /* 按鈕樣式 */
+        .button {
+            width: 200px;
+            height: 50px;
+            margin: 0 10px;
+            margin-top: -750px;
+            background-color: #000000;
+            color: #FFFF00;
+            text-align: center;
+            line-height: 50px;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: background-color 0.3s, color 0.3s;
+            font-size: 20px;
+        }
+
+        /* 鼠標懸停時按鈕樣式 */
+        .button:hover {
+            background-color: #FFFF00;
+            color: #000000;
+        }
+
+        /* 第二個按鈕容器樣式 */
+        .button-container2 {
+            position: absolute;
+            top: 50%;
+            left: 75%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 第二個按鈕樣式 */
+        .button2 {
+            display: inline-block;
+            width: 200px;
+            height: 40px;
+            margin: 0 10px;
+            background-color: #03bcef;
+            color: white;
+            text-align: center;
+            line-height: 40px;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* 鼠標懸停時第二個按鈕樣式 */
+        .button2:hover {
+            background-color: white;
+            color: #03bcef;
+        }
+
+        /* 其他元素容器樣式 */
+        .container2 {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        /* 選擇框樣式 */
+        select {
+            width: calc(100% - 40px);
+            padding: 10px;
+            margin: 10px 10px;
+            box-sizing: border-box;
+        }
+
+        /* 選項樣式 */
+        option {
+            background-color: #FFFFFF;
+            color: #000000;
+        }
+
+        /* 刪除按鈕樣式 */
+        .delete-button {
+            background-color: #7F7F7F;
+            color: #FFFFFF;
+            font-size: 20px;
+        }
+
+        /* 媒體查詢 */
+        @media only screen and (min-width: 768px) {
+            .navbar {
+                position: relative;
+                background-color: transparent;
+            }
+
+            .navbar a {
+                display: inline-block;
+                margin: 0;
+                padding: 14px 20px;
+            }
+
+            img {
+                max-width: 50%;
+            }
+
+            select {
+                width: 10%;
+            }
+
+            button {
+                display: inline-block;
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 導航欄 -->
+    <div class="navbar">
+        <a onclick="herfGO('frontpage1')" href="#">開啟賽事</a>
+        <a onclick="herfGO('historydata')" href="#">歷史數據</a>
+        <a onclick="herfGO('backstage')" href="#">設備設定</a>
+        <a onclick="logout()" href="#">登出</a>
+    </div>
+
+    <!-- 選擇賽事下拉選單 -->
+    <select id="mySelect">
+        <option value="" disabled selected hidden>選擇賽事</option>
+    </select>
+
+    <!-- 表格容器 -->
+    <div class="table-container">
+        <table id="myTable">
+            <thead>
+                <tr>
+                    <!-- 表頭 -->
+                    <th>裝置 MAC</th>
+                    <th>姓名</th>
+                    <th>圈數</th>
+                    <th id="timeHeader">時間</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <!-- 表格主體 -->
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- 按鈕容器 -->
+    <div class="container2">
+        <button class="button2" onclick="save()">修改</button>
+    </div>
+</body>
+<script>
+    // 定義全局變量用於存儲賽事數據和賽事ID
+    var racedata;
+    var raceID;
+
+    // 定義導航功能，根據點擊的頁面導航到相應的URL
+    function herfGO(page) {
+        window.location.href = '/' + page;
+    }
+
+    // 當網頁加載完成時執行以下代碼
+    window.onload = function () {
+        // 調用函數獲取賽事信息
+        getraceInfo();
+    }
+
+    // 定義函數用於從服務器獲取賽事信息並填充下拉選單
+    function getraceInfo() {
+        // 使用 fetch 函數發送 GET 請求到指定的 URL 獲取賽事信息
+        fetch("/historydata/getraceInfo")
+            // 解析服務器的 JSON 响應
+            .then(response => response.json())
+            // 獲取到賽事信息後執行以下代碼
+            .then(raceInfo => {
+                // 獲取下拉選單元素
+                var selectElement = document.querySelector('select');
+                // 將獲取到的賽事信息存儲到全局變量 racedata 中
+                racedata = raceInfo;
+                // 遍歷賽事信息並將每個賽事創建為一個新的選項，添加到下拉選單中
+                for (var i = 0; i < raceInfo.length; i++) {
+                    var newOption = document.createElement('option');
+                    newOption.value = raceInfo[i].race_id;
+                    newOption.text = raceInfo[i].race_name;
+                    selectElement.appendChild(newOption);
+                }
+            })
+            // 如果發生錯誤，打印錯誤信息到控制台
+            .catch(error => {
+                console.error("Error reloading MQTT data:", error);
+            });
+    }
+
+    // 獲取<select>元素
+    var selectElement = document.getElementById('mySelect');
+
+    // 添加change事件監聽器
+    selectElement.addEventListener('change', function () {
+        // 當下拉選單選擇的值發生變化時，執行以下代碼
+        // 獲取當前選擇的選項的值
+        var selectedValue = selectElement.value;
+
+        // 獲取表格的<tbody>元素
+        var mytbody = document.getElementById("myTable").getElementsByTagName('tbody')[0];
+        // 清空表格內容
+        mytbody.innerHTML = '';
+
+        // 將選擇的賽事ID存儲到全局變量 raceID 中
+        raceID = selectedValue;
+
+        // 調用函數以獲取所選賽事的賽事數據
+        getraceData(selectedValue);
+    });
+
+    function getraceData(selectedValue) {
+        // 使用 Fetch API 向伺服器端發送請求，獲取選定賽事的賽者數據
+        fetch("/historydata/getracerData?variable=" + selectedValue)
+            .then(response => response.json()) // 解析伺服器端的 JSON 响應
+            .then(racerData => {
+                // 將獲得的賽者數據動態添加到表格中
+                for (var i = 0; i < racerData.length; i++) {
+                    addTableRow(racerData[i].macAddr, racerData[i].racer_name, racerData[i].turns, racerData[i].time_avg);
+                }
+                // 根據時間平均值對表格進行排序
+                sortTableByTime(1);
+                // 將刪除按鈕添加到表格中
+                addDeleteButtonsToTable();
+            })
+            .catch(error => {
+                // 處理發生的錯誤
+                console.error("Error reloading MQTT data:", error);
+            });
+    }
+
+    function addTableRow(macAddr, name, turns, time_avg) {
+        // 獲取表格的<tbody>元素
+        var myTable = document.getElementById("myTable").getElementsByTagName('tbody')[0];
+        // 在<tbody>中插入一個新的行
+        var newRow = myTable.insertRow();
+
+        // 插入 MAC 地址到第一列
+        var cell = newRow.insertCell(0);
+        cell.innerHTML = macAddr;
+
+        // 插入姓名到第二列
+        var input = createTextInput("name", "");
+        var cell = newRow.insertCell(1);
+        input.value = name;
+        cell.appendChild(input);
+
+        // 插入圈數到第三列
+        var input = createTextInput("turns", "");
+        var cell = newRow.insertCell(2);
+        if (turns == null) input.value = "";
+        else input.value = turns;
+        cell.appendChild(input);
+
+        // 插入時間平均值到第四列
+        var input = createTextInput("time_avg", "");
+        var cell = newRow.insertCell(3);
+        if (time_avg == null) input.value = "";
+        else input.value = time_avg;
+        cell.appendChild(input);
+
+        // 在最後一列插入空的單元格
+        var cell = newRow.insertCell(4);
+    }
+
+    // 獲取 <th> 時間 元素
+    var timeHeader = document.getElementById('timeHeader');
+    // 用於標記排序的狀態，0表示升序，1表示降序
+    var Sortflag = 0;
+    // 添加點擊事件監聽器
+    timeHeader.addEventListener('click', function () {
+        // 調用排序函數，並根據目前的排序狀態進行排序
+        sortTableByTime(Sortflag);
+        // 切換排序標誌，以便下一次點擊時使用相反的排序順序
+        Sortflag = !Sortflag;
+        // 在控制台輸出調試訊息
+        console.log('點擊了時間');
+    });
+
+    function sortTableByTime(Sortflag) {
+        // 獲取表格元素
+        var table = document.getElementById('myTable');
+        // 獲取表格中所有行並轉換為陣列
+        var rows = Array.from(table.querySelectorAll('tbody tr'));
+
+        // 排序表格行
+        rows.sort(function (a, b) {
+            // 提取每行的時間和圈數資料
+            var timeA = a.cells[3].querySelector('input[type="text"]').value;
+            var timeB = b.cells[3].querySelector('input[type="text"]').value;
+            var turnsA = a.cells[2].querySelector('input[type="text"]').value;
+            var turnsB = b.cells[2].querySelector('input[type="text"]').value;
+
+            // 將時間轉換為秒數
+            timeA = timeToSeconds(timeA);
+            timeB = timeToSeconds(timeB);
+
+            // 如果時間為0，將其設置為無窮大，以便在排序時將其放在最後
+            if (timeA == 0) timeA = Infinity;
+            if (timeB == 0) timeB = Infinity;
+
+            // 根據排序標誌和時間比較結果，決定行的順序
+            if (Sortflag) {
+                if (timeA == timeB) return turnsB - turnsA;
+                return timeA - timeB;
+            } else {
+                if (timeA == timeB) return turnsA - turnsB;
+                return timeB - timeA;
+            }
+        });
+
+        // 清空表格內容
+        table.querySelector('tbody').innerHTML = '';
+
+        // 將排序後的行重新添加到表格中
+        rows.forEach(function (row) {
+            table.querySelector('tbody').appendChild(row);
+        });
+    }
+
+    // 將時間字符串轉換為 JavaScript Date 對象
+    function getTimeFromString(timeString) {
+        // 假設時間格式為 'hh:mm:ss'
+        var parts = timeString.split(':');
+        var hours = parseInt(parts[0]); // 提取小時部分並轉換為數字
+        var minutes = parseInt(parts[1]); // 提取分鐘部分並轉換為數字
+        var seconds = parseInt(parts[2]); // 提取秒部分並轉換為數字
+
+        // 如果時間為 00:00:00，將其表示為無窮大
+        if (hours === 0 && minutes === 0 && seconds === 0) return Infinity;
+
+        // 創建一個新的 Date 對象，將日期部分設置為 0，只考慮時間部分
+        return new Date(0, 0, 0, hours, minutes, seconds);
+    }
+
+    function addDeleteButtonsToTable() {
+        var table = document.getElementById('myTable'); // 獲取表格元素
+        var rows = table.querySelectorAll('tbody tr'); // 獲取表格中所有的行元素
+
+        rows.forEach(function (row) { // 遍歷每一行
+            // 獲取號碼（這裡假設第一列是號碼）
+            var number = row.querySelector('td:first-child').textContent;
+
+            // 創建刪除按鈕元素
+            var button = document.createElement('button');
+            button.textContent = '刪除'; // 設置按鈕文本
+            button.classList.add('delete-button'); // 添加 CSS 類以便進行樣式設定
+
+            // 為刪除按鈕添加點擊事件監聽器
+            button.addEventListener('click', function () {
+                // 在點擊事件中，執行刪除賽者資料的相應操作
+                deleteRacerData(number); // 刪除對應賽者的資料
+                var rowToDelete = this.parentNode.parentNode; // 獲取要刪除的行元素
+                rowToDelete.parentNode.removeChild(rowToDelete); // 從 DOM 中刪除行元素
+            });
+
+            // 將刪除按鈕添加到操作列中（這裡假設操作列是第五列）
+            var cell = row.querySelector('td:nth-child(5)'); // 獲取操作列單元格
+            cell.appendChild(button); // 將刪除按鈕添加到操作列中
+        });
+    }
+
+    function deleteRacerData(selectedValue) {
+        // 向後端發送刪除賽者資料的請求
+        fetch("/historydata/deleteRacerData?variable=" + selectedValue + "&variable2=" + raceID)
+            .then(response => response.json()) // 解析後端的回應
+            .then(racerData => {
+                // 在成功刪除賽者資料後，重新排序表格
+                sortTableByTime(1);
+            })
+            .catch(error => {
+                console.error("Error reloading MQTT data:", error); // 處理錯誤情況
+            });
+    }
+
+    function logout() {
+        // 向後端發送登出請求
+        fetch("/login/logout", {
+            method: "GET" // 使用 GET 方法發送請求
+        })
+            .then(response => {
+                console.log(response); // 在控制台中輸出回應物件，以便檢查
+                if (response.redirected) {
+                    // 如果成功登出，則重定向到登錄頁面
+                    window.location.href = response.url;
+                } else {
+                    console.error("Logout failed"); // 登出失敗時輸出錯誤訊息
+                }
+            })
+            .catch(error => {
+                console.error("Error during logout:", error); // 處理登出過程中的錯誤
+            });
+    }
+
+    function timeToSeconds(timeString) {
+        // 將時間字串以 ':' 分割為小時、分鐘和秒
+        var parts = timeString.split(':');
+        // 將分割後的部分解析為整數
+        var hours = parseInt(parts[0], 10);
+        var minutes = parseInt(parts[1], 10);
+        var seconds = parseInt(parts[2], 10);
+        // 將時間轉換為秒數並返回
+        return hours * 3600 + minutes * 60 + seconds;
+    }
+
+    function save() {
+        var table = document.getElementById('myTable'); // 獲取表格元素
+        var rows = Array.from(table.querySelectorAll('tbody tr')); // 獲取所有表格行
+
+        // 初始化賽手資料陣列和驗證旗標
+        let RacerData = [];
+        var validFlag = 1;
+
+        // 遍歷每一行表格
+        rows.forEach(function (row) {
+            // 獲取每一行的資料
+            var MACValue = row.cells[0].textContent; // MAC位址
+            var Name = row.cells[1].querySelector('input[type="text"]'); // 姓名
+            var Turns = row.cells[2].querySelector('input[type="text"]'); // 圈數
+            var Time_avg = row.cells[3].querySelector('input[type="text"]'); // 平均時間
+
+            // 驗證時間格式是否有效
+            if (!isValidTimeFormat(Time_avg.value)) validFlag = 0;
+
+            // 創建賽手物件，將資料加入賽手資料陣列
+            let racer = {
+                macAddr: MACValue,
+                Name: Name.value,
+                Turns: Turns.value,
+                Time_avg: Time_avg.value,
+                race_id: raceID // 賽事 ID
+            };
+
+            RacerData.push(racer);
+        });
+
+        // 如果時間格式驗證通過，則傳送賽手資料
+        if (validFlag) postData(RacerData);
+        else alert("時間格式錯誤!\n範例：00:00:00");
+    }
+
+    function createTextInput(name, placeholder) {
+        // 創建一個 input 元素
+        var input = document.createElement("input");
+        input.type = "text"; // 設置輸入框類型為文本
+        input.name = name; // 設置輸入框名稱
+        input.placeholder = placeholder; // 設置輸入框占位符
+        input.style.width = "100%"; // 設置輸入框寬度為父元素的100%
+        input.style.height = "100%"; // 設置輸入框高度為父元素的100%
+        input.style.border = 1; // 設置邊框寬度為1個像素
+        input.style.boxSizing = "border-box"; // 設置盒模型為邊框盒模型
+        input.style.fontSize = "16px"; // 設置字體大小為16像素
+        input.style.textAlign = "center"; // 設置文本居中對齊
+        input.style.outline = "none"; // 隱藏焦點時的輪廓線
+        return input; // 返回創建的 input 元素
+    }
+
+    function postData(Data) {
+        // 發送 POST 請求到指定的路徑
+        fetch('/historydata/postData', {
+            method: 'POST', // 請求方法為 POST
+            headers: {
+                'Content-Type': 'application/json' // 設置請求頭的 Content-Type 為 application/json
+            },
+            body: JSON.stringify(Data) // 將資料轉換為 JSON 字串並作為請求體發送
+        })
+            .then(response => {
+                // 處理服務器的響應
+                if (response.ok) {
+                    // 如果響應成功，彈出提示資料已成功修改
+                    alert("資料已成功修改！");
+                } else {
+                    // 如果響應不成功，記錄錯誤信息到控制台
+                    console.error('Failed to send data');
+                }
+            })
+            .catch(error => {
+                // 處理發送請求過程中的錯誤
+                alert("發生錯誤：" + error.message); // 彈出提示發生錯誤，並顯示錯誤信息
+                console.error('Error:', error); // 記錄錯誤信息到控制台
+            });
+    }
+
+    function isValidTimeFormat(timeString) {
+        // 定義正則表達式，檢查時間格式是否為 00:00:00
+        const regex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/;
+        // 使用正則表達式測試傳入的時間字串是否符合格式要求，並返回測試結果
+        return regex.test(timeString);
+    }
+</script>
+
+</html>

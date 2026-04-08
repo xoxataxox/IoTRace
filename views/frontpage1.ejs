@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>開啟賽事</title>
+    <style>
+        body {
+            background-color: #E7E6E6;
+        }
+
+        p {
+            text-align: center;
+            font-size: 54px;
+            color: rgb(255, 0, 0);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            overflow: hidden;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            padding: 14px 20px;
+            text-decoration: none;
+            color: yellow;
+            background-color: black;
+            border-radius: 25px;
+            
+        }
+        .navbar a:hover {
+            background-color: yellow;
+            color: black;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+
+        table {
+        border-collapse: collapse; /* 表格邊框合併 */
+        width: 300px; /* 設定表格寬度 */
+        }
+
+        th {
+        padding: 8px; /* 設定內容與邊框的間距 */
+        text-align: center; /* 文字靠左對齊 */
+        }
+
+        th:nth-child(1) {
+        background-color: #00B0F0;/* 第一個th藍底 */
+        color: white; /* 白色字體 */
+        }
+
+        th:nth-child(2) {
+        background-color: #C55A11; /* 第二個th橙底 */
+        color: white; /* 白色字體 */
+        }
+
+        td {
+            border: 1px solid black;
+            /* 設定邊框 */
+            padding: 8px;
+            /* 設定內容與邊框的間距 */
+            text-align: left;
+            /* 文字靠左對齊 */
+        }
+
+        .table-caption {
+            position: absolute;
+            top: 25%;
+            /* 在表格下方150px的位置 */
+            left: 75%;
+            /* 文字說明相對於body定位 */
+            /*top: 300px;*/
+            /* 在inputbox下方50px的位置 */
+            /*left: 16%;*/
+            /* 水平居中 */
+            transform: translateX(-50%);
+            /* 水平居中 */
+            font-size: 54px;
+            color: rgb(255, 0, 0);
+            /* 白色字體 */
+            display: none;
+        }
+
+        .button-container2 {
+            position: absolute;
+            /* 第二種button容器相對於body定位 */
+            top: 50%;
+            /* 在表格下方150px的位置 */
+            left: 75%;
+            /* 水平居中 */
+            transform: translateX(-50%);
+            /* 水平居中 */
+            display: flex;
+            /* 使用 Flexbox 進行排列 */
+            flex-direction: column;
+            /* 垂直排列 */
+            align-items: center;
+            /* 元素居中對齊 */
+        }
+
+        .button2 {
+            display: inline-block;
+            /* 讓按鈕在同一行顯示 */
+            width: 300px;
+            /* 按鈕寬度 */
+            height: 40px;
+            /* 按鈕高度 */
+            margin: 0 10px;
+            /* 設定按鈕間距 */
+            background-color: #0070C0;
+            /* 橙色背景 */
+            color: white;
+            /* 白色字體 */
+            text-align: center;
+            line-height: 40px;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+            /* 按鈕顏色過渡效果 */
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+
+        .button2:hover {
+            background-color: #FFFFFF;
+            /* 鼠標懸停時白色背景 */
+            color: #0070C0;
+            /* 鼠標懸停時橙色字體 */
+        }
+
+        .button2+.button2 {
+            margin-top: 20px;
+            /* 按鈕之間的間距 */
+        }
+
+        @media only screen and (min-width: 768px) {
+            .navbar {
+                position: relative;
+                background-color: transparent;
+            }
+            .navbar a {
+                display: inline-block;
+                margin: 0;
+                padding: 14px 20px;
+            }
+            img {
+                max-width: 50%;
+            }
+            input[type="text"] {
+                width: 50%;
+            }
+            button2 {
+                display: inline-block;
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 導航欄 -->
+    <div class="navbar">
+        <a onclick="herfGO('frontpage1')" href="#">開啟賽事</a>
+        <a onclick="herfGO('historydata')" href="#">歷史數據</a>
+        <a onclick="herfGO('backstage')" href="#">設備設定</a>
+        <a onclick="logout()" href="#">登出</a>
+    </div>
+
+    <!-- 輸入框，用於輸入賽事名稱 -->
+    <input type="text" placeholder="請輸入賽事名稱" id="race_name">
+
+    <!-- 參賽者表格 -->
+    <div class="table-container">
+        <table border="1" id="myTable">
+            <thead>
+                <tr>
+                    <th>裝置 MAC</th> <!-- 表頭：裝置 MAC -->
+                    <th>姓名</th> <!-- 表頭：姓名 -->
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- 提示訊息，當尚未登入賽事資訊時顯示 -->
+    <div id="FailMessage">
+        <p>尚未登入賽事資訊</p>
+    </div>
+
+    <!-- 按鈕容器，包含掃描裝置和下一步按鈕 -->
+    <div class="button-container2">
+        <a class="button2" onclick="scanMAC()" href="#">掃描裝置</a>
+        <a class="button2" onclick="nextpage()" href="#">下一步</a>
+    </div>
+
+</body>
+<script>
+    // 導航到指定頁面
+    function herfGO(page) {
+        window.location.href = '/' + page;
+    }
+
+    // 掃描MAC地址
+    var currentTime;
+    var scan_flag = 0;
+    function scanMAC() {
+        var message = document.getElementById("FailMessage");
+        message.style.display = 'none';
+        if (!scan_flag) {
+            getcurrentTime();
+            getRacerMAC_Tigger = setInterval(getRacerMAC, 5000);
+        }
+        scan_flag = 1;
+    }
+
+    // 收集比賽相關信息
+    function nextpage() {
+        let RacerInfo = {};
+        var tableRows = document.querySelectorAll("#myTable tbody tr");
+        var racename = document.getElementById('race_name').value;
+        if (!tableRows.length || !racename) {
+            var message = document.getElementById("FailMessage");
+            message.style.display = 'block';
+            setTimeout(function () {
+                message.style.display = 'none';
+            }, 5000); // 5秒後消失
+        } else {
+            for (var i = 0; i < tableRows.length; i++) {
+                var cell = tableRows[i].cells[1];
+                var input = cell.querySelector("input[type='text']");
+                var RacerNameValue = input.value.trim();
+                var MACValue = tableRows[i].cells[0].textContent;
+                RacerInfo[i] = { MAC: MACValue, Name: RacerNameValue }
+            }
+            let RaceData = {
+                RaceName: racename,
+                RacerInfo: RacerInfo
+            };
+            clearInterval(getRacerMAC_Tigger);
+            postData(RaceData);
+        }
+    }
+
+    // 獲取最新的MAC地址
+    function getRacerMAC() {
+        fetch("/frontpage1/getRacerMAC?variable=" + currentTime)
+            .then(response => response.json())
+            .then(RacerMAC => {
+                var tableRows = document.querySelectorAll("table tbody tr");
+                for (var i = 0; i < RacerMAC.length; i++) {
+                    if (tableRows.length <= i) macTd = 0;
+                    else macTd = tableRows[i].querySelector("td:nth-child(1)").textContent;
+                    if (macTd != RacerMAC[i].macAddr) {
+                        addTableRow(RacerMAC[i].macAddr);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error("重新載入MQTT數據時出錯:", error);
+            });
+    }
+
+    // 創建文本輸入框
+    function createTextInput(name, placeholder) {
+        var input = document.createElement("input");
+        input.type = "text";
+        input.name = name;
+        input.placeholder = placeholder;
+        input.style.width = "100%";
+        input.style.height = "100%";
+        input.style.border = "none";
+        input.style.boxSizing = "border-box";
+        input.style.background = "none";
+        input.style.fontSize = "20px";
+        input.style.textAlign = "center";
+        input.style.outline = "none";
+        return input;
+    }
+
+    // 添加一行到表格
+    function addTableRow(macAddr) {
+        var myTable = document.getElementById("myTable").getElementsByTagName('tbody')[0];
+        var newRow = myTable.insertRow();
+        var cell = newRow.insertCell(0);
+        cell.innerHTML = macAddr;
+        var input = createTextInput("racer_name", "待輸入姓名");
+        var cell = newRow.insertCell(1);
+        cell.appendChild(input);
+    }
+
+    // 發送數據到服務器
+    function postData(Data) {
+        fetch('/frontpage1/postData', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(Data)
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    console.error('數據發送失敗');
+                }
+            })
+            .then(data => {
+                console.log('收到數據:', data.RaceID);
+                let nextPath = '/frontpage2?' + encodeURIComponent('variableName') + '=' + encodeURIComponent(data.RaceID);
+                window.location.href = nextPath;
+            })
+            .catch(error => {
+                alert("該比賽名稱已被使用!");
+                console.error('錯誤:', error);
+            });
+    }
+
+    // 獲取當前時間
+    function getcurrentTime() {
+        var currentDate = new Date();
+        var year = currentDate.getFullYear();
+        var month = currentDate.getMonth() + 1;
+        var day = currentDate.getDate();
+        var hour = currentDate.getHours();
+        var minute = currentDate.getMinutes();
+        var second = currentDate.getSeconds();
+        currentTime = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second + '';
+    }
+
+    // 用戶登出
+    function logout() {
+        fetch("/login/logout", {
+            method: "GET"
+        })
+            .then(response => {
+                console.log(response); // 檢查響應對象
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    console.error("登出失敗");
+                }
+            })
+            .catch(error => {
+                console.error("登出過程中出錯:", error);
+            });
+    }
+</script>
+
+
+</html>

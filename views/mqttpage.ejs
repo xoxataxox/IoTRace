@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MQTT服務器登入資訊</title>
+<style>
+body {
+    font-family: Arial, sans-serif; /* 設置字體為 Arial 或 sans-serif */
+}
+
+.container {
+    width: 80%; /* 設置容器寬度為父元素寬度的 80% */
+    margin: 0 auto; /* 水平居中 */
+    padding-top: 20px; /* 上方留白 */
+}
+
+.section {
+    margin-bottom: 20px; /* 底部間距 */
+    display: flex; /* 使用 Flexbox 進行排列 */
+    align-items: center; /* 元素垂直居中對齊 */
+}
+
+.section span {
+    min-width: 130px; /* 最小寬度 */
+    flex: 0 0 auto; /* 不可伸縮 */
+    text-align: right; /* 文字右對齊 */
+    margin-right: 10px; /* 右邊間距 */
+}
+
+.form-control {
+    flex: 1; /* 伸縮比例為 1，填滿可用空間 */
+    padding: 5px; /* 內邊距 */
+    border: 1px solid #ccc; /* 邊框 */
+    border-radius: 4px; /* 圓角 */
+    box-sizing: border-box; /* 盒模型設置 */
+    width: 100%; /* 寬度設置為 100% */
+}
+
+.section-divider {
+    border-top: 1px solid #ccc; /* 上方邊框 */
+    margin-top: 20px; /* 上方間距 */
+    margin-bottom: 20px; /* 下方間距 */
+}
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <!-- MQTT服務器登入資訊標題 -->
+        <div class="section">
+            <div class="section-header">MQTT服務器登入資訊</div>
+        </div>
+        <!-- 分隔線 -->
+        <div class="section-divider"></div>
+        <!-- Protocol 選擇框 -->
+        <div class="section">
+            <span>Protocol:</span>
+            <select class="form-control" id="protocol">
+                <option value="MQTT" selected>MQTT</option>
+                <option value="CoAP">CoAP</option>
+                <option value="XMPP">XMPP</option>
+                <option value="AMQP">AMQP</option>
+            </select>
+        </div>
+        <!-- MQTT ACK 選擇框 -->
+        <div class="section">
+            <span>MQTT ACK:</span>
+            <select class="form-control" id="mqtt_ack">
+                <option value="off" selected>off</option>
+                <option value="on">on</option>
+            </select>
+        </div>
+        <!-- Hostname 輸入框 -->
+        <div class="section">
+            <span>Hostname:</span>
+            <input type="text" class="form-control" id="hostname" value="test">
+        </div>
+        <!-- QoS 選擇框 -->
+        <div class="section">
+            <span>QoS:</span>
+            <select class="form-control" id="qos">
+                <option value="0">0</option>
+                <option value="1" selected>1</option>
+                <option value="2">2</option>
+            </select>
+        </div>
+        <!-- Username 輸入框 -->
+        <div class="section">
+            <span>Username:</span>
+            <input type="text" class="form-control" id="username" value="gataway">
+        </div>
+        <!-- Password 輸入框 -->
+        <div class="section">
+            <span>Password:</span>
+            <input type="text" class="form-control" id="password" value="password">
+        </div>
+        <!-- Publish topic 輸入框 -->
+        <div class="section">
+            <span>Publish topic:</span>
+            <input type="text" class="form-control" id="publish_topic" value="GIOT-GW/DL/">
+        </div>
+        <!-- Subscribe topic 輸入框 -->
+        <div class="section">
+            <span>Subscribe topic:</span>
+            <input type="text" class="form-control" id="Subscribe_topic" value="GIOT-GW/DL/">
+        </div>
+        <!-- Downlink ACK 輸入框 -->
+        <div class="section">
+            <span>Downlink ACK:</span>
+            <input type="text" class="form-control" id="downlink_ack" value="GIOT-GW/DL-report/">
+        </div>
+        <!-- Port 選擇框 -->
+        <div class="section">
+            <span>Port:</span>
+            <select class="form-control" id="port">
+                <option value="1883" selected>1883</option>
+                <option value="8883">8883</option>
+            </select>
+        </div>
+        <!-- 用於傳遞資料的隱藏輸入框 -->
+        <div class="section">
+            <input type="hidden" id="mqttData" value='<%- JSON.stringify(mqttData) %>'>
+            <!-- 按鈕用於儲存並傳遞資料 -->
+            <button onclick="sendDataToNodeServer()">儲存並傳遞資料</button>
+        </div>
+    </div>
+<script>
+window.onload = function () {
+    // 獲取存儲 MQTT 服務器登入資訊的隱藏輸入框
+    const mqttDataInput = document.getElementById('mqttData');
+
+    // 將隱藏輸入框中的值解析為 JavaScript 對象
+    const mqttData = JSON.parse(mqttDataInput.value);
+
+    // 將解析後的資訊填充到表單元素中
+    var protocol = document.getElementById("protocol")
+    protocol.value = mqttData.protocol;
+    var port = document.getElementById("port");
+    port.value = mqttData.port;
+    var username = document.getElementById("username");
+    username.value = mqttData.username;
+    var mqtt_ack = document.getElementById("mqtt_ack");
+    mqtt_ack.value = mqttData.mqtt_ack;
+    var hostname = document.getElementById("hostname");
+    hostname.value = mqttData.hostname;
+    var qos = document.getElementById("qos");
+    qos.value = mqttData.qos;
+    var password = document.getElementById("password");
+    password.value = mqttData.password;
+    var publish_topic= document.getElementById("publish_topic");
+    publish_topic.value=mqttData.publish_topic;
+    var Subscribe_topic= document.getElementById("Subscribe_topic");
+    Subscribe_topic.value=mqttData.Subscribe_topic;
+    var downlink_ack= document.getElementById("downlink_ack");
+    downlink_ack.value=mqttData.downlink_ack;
+
+    // 在控制台中輸出資訊，方便檢查
+    console.log(mqttData);
+}
+
+function sendDataToNodeServer() {
+    // 收集表單中的資訊並封裝為 JavaScript 物件
+    var formData = {
+        protocol: document.getElementById("protocol").value,
+        mqtt_ack: document.getElementById("mqtt_ack").value,
+        hostname: document.getElementById("hostname").value,
+        qos: document.getElementById("qos").value,
+        username: document.getElementById("username").value,
+        password: document.getElementById("password").value,
+        publish_topic: document.getElementById("publish_topic").value,
+        Subscribe_topic: document.getElementById("Subscribe_topic").value,
+        downlink_ack: document.getElementById("downlink_ack").value,
+        port: document.getElementById("port").value
+    };
+
+    // 使用 fetch 函式將資料發送到後端伺服器
+    fetch('/mqttpage/receive_data', {
+        method: 'POST', // 使用 POST 方法發送資料
+        headers: {
+            'Content-Type': 'application/json' // 設定請求標頭，指定內容為 JSON 格式
+        },
+        body: JSON.stringify(formData) // 將 JavaScript 物件轉換為 JSON 字串並設定為請求主體
+    })
+    .then(response => {
+        // 檢查響應狀態碼
+        if (response.ok) {
+            // 如果響應狀態碼為 200，則返回響應文本
+            return response.text();
+        }
+        // 若響應狀態碼不為 200，則拋出錯誤
+        throw new Error('Network response was not ok.');
+    })
+    .then(data => {
+        // 處理成功後的響應數據
+        console.log(data); // 在控制台中輸出響應數據
+        alert("資料已成功發送到伺服器！"); // 顯示成功提示
+    })
+    .catch(error => {
+        // 處理錯誤
+        console.error('There was a problem with your fetch operation:', error); // 在控制台中輸出錯誤訊息
+        alert("發生錯誤：" + error.message); // 顯示錯誤提示
+    });
+}
+</script>
+</body>
+</html>

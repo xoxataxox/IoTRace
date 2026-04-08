@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>設備設定</title>
+  <style>
+    /* CSS 樣式 */
+
+    /* 標題樣式 */
+    h1 {
+      text-indent: 4em;
+    }
+
+    /* 整體背景色 */
+    body {
+      background-color: #E7E6E6;
+    }
+
+    /* 導航欄 */
+    .navbar {
+      overflow: hidden;
+    }
+
+    .navbar a {
+      float: left;
+      display: block;
+      padding: 14px 20px;
+      text-decoration: none;
+      color: yellow;
+      background-color: black;
+      border-radius: 25px;
+    }
+
+    .navbar a:hover {
+      background-color: yellow;
+      color: black;
+    }
+
+    /* 圖片 */
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* 主容器 */
+    .container {
+      display: flex;
+      gap: 20px;
+      left: 5%;
+      top: 20%;
+      width: 90%;
+      position: absolute;
+    }
+
+    /* 子容器 */
+    .box-container {
+      position: relative;
+      flex: 1;
+    }
+
+    /* 第二個容器 */
+    .container2 {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    /* 表格樣式 */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    table th {
+      border: none;
+      width: 100px;
+      padding: 10px;
+      text-align: center;
+      font-size: 25px;
+    }
+
+    table td {
+      border: 20px solid #E7E6E6;
+      width: 20px;
+      padding: 30px;
+      text-align: center;
+      background-color: #f7f6f6;
+      border-collapse: separate;
+      table-layout: auto;
+    }
+
+    /* 按鈕樣式 */
+    .button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #03bcef;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .blue-button,
+    .skyblue-button {
+      color: white;
+      border: 2px solid white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      margin: 0 10px;
+      font-size: 20px;
+      cursor: pointer;
+      width: 200px;
+      font-weight: bold;
+    }
+
+    .blue-button:hover,
+    .skyblue-button:hover {
+      background-color: white;
+      color: #000000;
+    }
+
+    .blue-button:focus,
+    .skyblue-button:focus {
+      outline: none;
+    }
+
+    .blue-button {
+      border-color: #007bff;
+      background-color: #007bff;
+    }
+
+    .skyblue-button {
+      border-color: #FFF2CC;
+      background-color: #FFF2CC;
+      color: black;
+    }
+
+    /* 新增的樣式 */
+    .message {
+      display: none;
+      padding: 12px;
+      font-size: 20px;
+      text-align: center;
+      width: 100px;
+    }
+
+    /* 媒體查詢，響應式佈局 */
+    @media only screen and (min-width: 768px) {
+      .navbar {
+        position: relative;
+        background-color: transparent;
+      }
+
+      .navbar a {
+        display: inline-block;
+        margin: 0;
+        padding: 14px 20px;
+      }
+
+      img {
+        max-width: 50%;
+      }
+
+      buttons {
+        display: inline-block;
+        margin: 0 10px;
+      }
+
+      .container2 {
+        flex-direction: row;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="navbar">
+    <a onclick="herfGO('frontpage1')" href="#">開啟賽事</a>
+    <a onclick="herfGO('historydata')" href="#">歷史數據</a>
+    <a onclick="herfGO('backstage')" href="#">設備設定</a>
+    <a onclick=logout() href="#">登出</a>
+  </div>
+
+  <div class="container">
+    <blockquote></blockquote>
+    <table id="myTable">
+      <colgroup>
+        <col span="1" style=" width: 10%;">
+        <col span="1" style=" width: 30%;">
+        <col span="1" style=" width: 30%;">
+        <col span="1" style=" width: 10%;">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>編號</th>
+          <th></th>
+          <th></th>
+          <th>rssi閥值</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <blockquote></blockquote>
+  </div>
+  <div class="container2">
+    <div class="message" id="successMessage">設定成功!</div>
+    <button class="button blue-button" onclick="openNewWindow()">MQTT設定</button>
+    <button class="button blue-button" onclick="saveconfirm()">送出設定</button>
+    <button class="button skyblue-button" onclick="addTableRow()">新增gateway</button>
+    <blockquote></blockquote>
+  </div>
+
+</body>
+<script>
+  var No = 1;
+
+  // 導航到指定頁面
+  function herfGO(page) {
+    window.location.href = '/' + page;
+  }
+
+  window.onload = function () {
+    // 從本地存儲中讀取表格數據
+    var retrievedData = localStorage.getItem("tableData");
+    if (retrievedData != null) {
+      var parsedData = JSON.parse(retrievedData);
+      var itemListLength = Object.keys(parsedData).length;
+      console.log(parsedData)
+      // 遍歷數據，將數據填充到表格中
+      for (var i = 1; i < itemListLength + 1; i++) {
+        var rowData = parsedData[i];
+        var table = document.getElementById("myTable").getElementsByTagName('tbody')[0];
+        var newRow = table.insertRow();
+
+        var number = i;
+        var IP = rowData[1];
+        var macAddr = rowData[2];
+        var rssi = rowData[3];
+
+        var cell = newRow.insertCell(0);
+        cell.style.fontSize = "20px";
+        cell.innerHTML = number;
+        No++;
+
+        var input = createTextInput("IP", "IP");
+        input.value = IP;
+        var cell = newRow.insertCell(1);
+        cell.appendChild(input);
+
+        var input = createTextInput("macAddr", "Mac address");
+        input.value = macAddr;
+        var cell = newRow.insertCell(2);
+        cell.appendChild(input);
+
+        var input = createTextInput("rssi", "rssi");
+        input.value = rssi;
+        var cell = newRow.insertCell(3);
+        cell.appendChild(input);
+      }
+    } else {
+      No = 1;
+    }
+    adjustButtonsPosition();
+  }
+
+  // 創建文本輸入框
+  function createTextInput(name, placeholder) {
+    var input = document.createElement("input");
+    input.type = "text";
+    input.name = name;
+    input.placeholder = placeholder;
+    input.style.width = "100%";
+    input.style.height = "100%";
+    input.style.border = "none";
+    input.style.boxSizing = "border-box";
+    input.style.background = "none";
+    input.style.fontSize = "20px";
+    input.style.textAlign = "center";
+    input.style.outline = "none";
+    return input;
+  }
+
+  // 添加一行到表格
+  function addTableRow() {
+    var myTable = document.getElementById("myTable").getElementsByTagName('tbody')[0];
+    var newRow = myTable.insertRow();
+
+    var cell = newRow.insertCell(0);
+    cell.style.fontSize = "20px";
+    cell.innerHTML = No;
+    No++;
+
+    var input = createTextInput("IP", "IP");
+    var cell = newRow.insertCell(1);
+    cell.appendChild(input);
+
+    var input = createTextInput("macAddr", "Mac address");
+    var cell = newRow.insertCell(2);
+    cell.appendChild(input);
+
+    var input = createTextInput("rssi", "rssi");
+    var cell = newRow.insertCell(3);
+    cell.appendChild(input);
+
+    adjustButtonsPosition();
+  }
+
+  // 提交表格數據
+  function submitTable() {
+    var tableRows = document.querySelectorAll("#myTable tbody tr");
+    var itemList = {};
+    No = 1;
+    var succ = 1;
+
+    tableRows.forEach(function (row) {
+      var rowData = [];
+      rowData.push(row.cells[0].innerHTML);
+      var validData = true;
+
+      for (var i = 1; i < 4; i++) {
+        var cell = row.cells[i];
+        var input = cell.querySelector("input[type='text']");
+        if (input) {
+          var inputValue = input.value.trim();
+          if (i == 1 || i == 3) {
+            if (inputValue == '') {
+              validData = false;
+              break;
+            }
+          }
+          rowData[i] = inputValue;
+        }
+      }
+
+      if (validData && rowData[1] !== undefined && rowData[3] !== undefined) {
+        if (!validateIP(rowData[1])) {
+          alert("IP格式錯誤! 請修改");
+          succ = 0;
+          return 0;
+        }
+        itemList[No] = rowData;
+        No++;
+      }
+    });
+    if (succ) {
+      var itemListJSON = JSON.stringify(itemList);
+      localStorage.setItem("tableData", itemListJSON);
+      var message = document.getElementById("successMessage");
+      message.style.display = 'block';
+      setTimeout(function () {
+        message.style.display = 'none';
+      }, 5000); // 5秒後消失
+      console.log("已送出表格:", itemList);
+    }
+  }
+
+  // 調整按鈕位置
+  function adjustButtonsPosition() {
+    var container = document.querySelector('.container');
+    var buttons = document.querySelector('.buttons');
+
+    // 如果沒有找到 .container 或 .buttons 元素，則退出
+    if (!container || !buttons) return;
+
+    // 獲取 .container 元素的底部位置
+    var containerBottom = container.offsetTop + container.offsetHeight;
+
+    // 將 .buttons 元素的 top 屬性設置為 .container 元素的底部位置
+    buttons.style.top = containerBottom + 'px';
+  }
+
+  // 驗證IP地址格式
+  function validateIP(ip) {
+    // 定義 IP 地址的正則表達式
+    var ipRegex = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
+
+    // 檢查 IP 是否符合正則表達式
+    if (ipRegex.test(ip)) {
+      // 檢查每個數字是否在有效範圍內 (0~255)
+      var parts = ip.split('.');
+      for (var i = 0; i < parts.length; i++) {
+        var num = parseInt(parts[i]);
+        if (num < 0 || num > 255) {
+          return false;
+        }
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // 提示用戶確認是否儲存表格
+  function saveconfirm() {
+    var result = confirm("你確定要執行儲存嗎？\n注意：IP或RSSI設為空值會自動將該行刪除");
+
+    if (result) {
+      submitTable()
+      // 使用者按下了「確定」按鈕
+      console.log("使用者按下了「確定」按鈕");
+    } else {
+      // 使用者按下了「取消」按鈕
+      console.log("使用者按下了「取消」按鈕");
+    }
+  }
+
+  // 用戶登出
+  function logout() {
+    fetch("/login/logout", {
+      method: "GET"
+    })
+      .then(response => {
+        console.log(response); // 檢查響應對象
+        if (response.redirected) {
+          // 如果成功登出，則重定向到登錄頁面
+          window.location.href = response.url;
+        } else {
+          console.error("登出失敗");
+        }
+      })
+      .catch(error => {
+        console.error("登出過程中出錯:", error);
+      });
+  }
+
+  // 打開新窗口
+  function openNewWindow() {
+    // 打開新窗口，指定網站
+    window.open('/mqttpage', '_blank');
+  }
+</script>
+
+</html>

@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Racer Info</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* CSS樣式 */
+        body {
+            font-family: Arial, sans-serif;
+            /* 使用Arial字體 */
+            margin: 0;
+            /* 頁面邊距設為0 */
+            padding: 0;
+            /* 頁面內邊距設為0 */
+            background-color: #E7E6E6;
+            /* 背景色設為淺灰色 */
+        }
+
+        img {
+            max-width: 100%;
+            /* 圖片寬度最大為100% */
+            display: block;
+            /* 圖片顯示為區塊元素 */
+            margin: 10px;
+            /* 外邊距設為10像素 */
+            filter: invert(100%);
+            /* 將圖片顏色反轉 */
+        }
+
+        .navbar {
+            overflow: hidden;
+            /* 溢出元素隱藏 */
+            justify-content: unset;
+            /* 不設置內容的水平對齊方式 */
+            align-items: center;
+            /* 元素垂直居中對齊 */
+        }
+
+        .navbar a {
+            float: left;
+            /* 鏈接左浮動 */
+            display: block;
+            /* 鏈接顯示為區塊元素 */
+            padding: 14px 20px;
+            /* 內邊距設置 */
+            text-decoration: none;
+            /* 取消下劃線 */
+            color: yellow;
+            /* 文字顏色為黃色 */
+            background-color: black;
+            /* 背景色為黑色 */
+            border-radius: 25px;
+            /* 圓角設置 */
+            margin: 10px;
+            /* 外邊距設置 */
+        }
+
+        .navbar a:hover {
+            background-color: yellow;
+            /* 鼠標懸停時的背景色為黃色 */
+            color: black;
+            /* 鼠標懸停時的文字顏色為黑色 */
+        }
+
+        table {
+            width: 100%;
+            /* 表格寬度100% */
+            float: left;
+            /* 表格左浮動 */
+            border-collapse: collapse;
+            /* 合併表格邊框 */
+            margin-bottom: 20px;
+            /* 下邊距設置 */
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+            /* 表格邊框設置 */
+            padding: 10px;
+            /* 內邊距設置 */
+            font-size: 20px;
+            /* 字體大小設置 */
+            text-align: center;
+            /* 文字居中 */
+        }
+
+        th {
+            font-weight: bold;
+            /* 表頭文字加粗 */
+            color: #F5F5F5;
+            /* 表頭文字顏色為白色 */
+        }
+
+        tr:nth-child(even) {
+            background-color: #F5F5F5;
+            /* 偶數行背景色為淺灰色 */
+        }
+
+        h1 {
+            margin-top: 50px;
+            /* 上邊距設置 */
+            margin-bottom: 50px;
+            /* 下邊距設置 */
+            text-align: center;
+            /* 文字居中 */
+        }
+
+        .th_id {
+            background-color: #4EADEA !important;
+            /* 表頭背景色為深藍色 */
+        }
+
+        .th_name {
+            background-color: #B25628 !important;
+            /* 表頭背景色為深橘色 */
+        }
+
+        .th_turn {
+            background-color: #2E5E7F !important;
+            /* 表頭背景色為深藍色 */
+        }
+
+        .th_time {
+            background-color: #2F6EBA !important;
+            /* 表頭背景色為深藍色 */
+        }
+
+        .timer {
+            font-family: Arial, sans-serif;
+            /* 使用Arial字體 */
+            text-align: right;
+            /* 文字右對齊 */
+            margin-top: 200px;
+            /* 上邊距設置 */
+            margin-bottom: 50px;
+            /* 下邊距設置 */
+            margin-left: 10px;
+            /* 左邊距設置 */
+            margin-right: 10px;
+            /* 右邊距設置 */
+            float: right;
+            /* 右浮動 */
+        }
+
+        .stopwatch {
+            font-size: 72px;
+            /* 字體大小設置 */
+            font-weight: bold;
+            /* 字體加粗 */
+            color: red;
+            /* 文字顏色為紅色 */
+            margin-bottom: 30px;
+            /* 下邊距設置 */
+        }
+
+        .btn.btn-primary.btn-lg {
+            font-size: 32px;
+            /* 按鈕字體大小設置 */
+            margin-top: 50px;
+            /* 上邊距設置 */
+        }
+
+        .left-side {
+            flex: 2;
+            /* 左側區域彈性佈局比例為2 */
+            padding: 20px;
+            /* 內邊距設置 */
+        }
+
+        .right-side {
+            flex: 1;
+            /* 右側區域彈性佈局比例為1 */
+            padding: 20px;
+            /* 內邊距設置 */
+            display: flex;
+            /* 彈性盒子佈局 */
+            justify-content: center;
+            /* 主軸居中對齊 */
+            align-items: center;
+            /* 交叉軸居中對齊 */
+            flex-direction: column;
+            /* 主軸方向設置為垂直 */
+        }
+
+        .container {
+            display: flex;
+            /* 彈性盒子佈局 */
+        }
+
+        .container2 {
+            display: flex;
+            /* 彈性盒子佈局 */
+            justify-content: space-around;
+            /* 內容平均分佈 */
+            align-items: center;
+            /* 元素垂直居中對齊 */
+            margin-bottom: 10px;
+            /* 下邊距設置 */
+        }
+
+        .col-md-8 {
+            position: absolute;
+            /* 位置設置為絕對定位 */
+            left: 5%;
+            /* 左邊距設置 */
+            top: 10%;
+            /* 上邊距設置 */
+        }
+
+        .col-md-1 {
+            position: absolute;
+            /* 位置設置為絕對定位 */
+            left: 88%;
+            /* 左邊距設置 */
+            top: 15%;
+            /* 上邊距設置 */
+        }
+
+        textInput {
+            width: 10%;
+            /* 寬度設置為10% */
+            flex: 1;
+            /* 彈性佈局比例為1 */
+            border: none;
+            /* 邊框設置為無 */
+            background-color: transparent;
+            /* 背景色設置為透明 */
+            cursor: default;
+            /* 鼠標指針設置為默認 */
+            text-align: center;
+            /* 文字居中對齊 */
+            font-size: 30px;
+            /* 字體大小設置 */
+            background-color: #F5F5F5;
+            /* 背景色設置為淺灰色 */
+        }
+
+        @media only screen and (min-width: 768px) {
+            .navbar {
+                position: relative;
+                /* 位置設置為相對定位 */
+                background-color: transparent;
+                /* 背景色設置為透明 */
+            }
+
+            .navbar a {
+                display: inline-block;
+                /* 鏈接顯示為內聯區塊元素 */
+                margin: 0;
+                /* 外邊距設置為0 */
+                padding: 14px 20px;
+                /* 內邊距設置 */
+            }
+
+            button {
+                margin-top: 10px;
+                /* 上邊距設置 */
+                margin-bottom: 10px;
+                /* 下邊距設置 */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 頁面主體 -->
+    <div class="container">
+        <!-- 左側區域 -->
+        <div class="left-side">
+            <!-- 導航欄 -->
+            <div class="navbar">
+                <a onclick="herfGO('frontpage1')" href="#">開啟賽事</a>
+                <a onclick="herfGO('historydata')" href="#">歷史數據</a>
+                <a onclick="herfGO('backstage')" href="#">設備設定</a>
+                <a onclick="logout()" href="#">登出</a>
+            </div>
+
+            <!-- 賽事資訊標題 -->
+            <div class="container2">
+                <input type="text" value="<%= data2[0].race_name %>" readonly class="textInput">
+                <h1>賽事即時成績</h1>
+            </div>
+
+            <!-- 賽事即時成績表格 -->
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="th_id">MAC</th>
+                        <th class="th_name">姓名</th>
+                        <th class="th_turn">圈數</th>
+                        <th class="th_time">平均時間</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 使用JavaScript動態生成表格內容 -->
+                    <% data.forEach(row=> { %>
+                        <tr>
+                            <td>
+                                <%= row.macAddr %>
+                            </td>
+                            <td>
+                                <%= row.racer_name %>
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                        <% }); %>
+                </tbody>
+            </table>
+        </div>
+        <!-- 右側區域 -->
+        <div class="right-side">
+            <!-- 計時器和按鈕 -->
+            <div class="timer">
+                <div class="d-grid gap-2">
+                    <div class="stopwatch"></div>
+                    <button id="startStopButton" class="btn btn-primary btn-lg"
+                        onClick="toggleStartStop()">Start</button>
+                    <button id="SaveButton" class="btn btn-primary btn-lg" onClick="SAVEDATA()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入Bootstrap的JavaScript庫 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JavaScript腳本 -->
+    <script>
+        // 定義一個函數，用於將頁面導航至指定的頁面
+        function herfGO(page) {
+            window.location.href = '/' + page;
+        }
+
+        // 定義計時器類
+        class Stopwatch {
+            constructor(display) {
+                this.running = false; // 計時器是否運行的標誌
+                this.display = display; // 顯示計時器數據的元素
+                this.reset(); // 初始化計時器數據
+                this.print(this.times); // 初始顯示計時器數據
+            }
+
+            // 重置計時器數據
+            reset() {
+                this.times = [0, 0, 0, 0]; // 小時、分鐘、秒、毫秒
+            }
+
+            // 啟動計時器
+            start() {
+                if (!this.time) this.time = performance.now(); // 如果計時器未啟動，記錄當前時間
+                if (!this.running) { // 如果計時器未運行
+                    this.running = true; // 設置為運行狀態
+                    // 每10毫秒更新一次計時器數據，並顯示
+                    this.interval = setInterval(() => {
+                        this.calculate();
+                        this.print();
+                    }, 10);
+                }
+            }
+
+            // 停止計時器
+            stop() {
+                this.running = false; // 設置為停止狀態
+                clearInterval(this.interval); // 清除定時器
+            }
+
+            // 計算時間差
+            calculate() {
+                var diff = performance.now() - this.time;
+                this.times[3] += diff; // 毫秒計時器
+                this.time += diff;
+                while (this.times[3] >= 1000) {
+                    this.times[2] += 1; // 秒計時器
+                    this.times[3] -= 1000;
+                }
+                while (this.times[2] >= 60) {
+                    this.times[1] += 1; // 分鐘計時器
+                    this.times[2] -= 60;
+                }
+                while (this.times[1] >= 60) {
+                    this.times[0] += 1; // 小時計時器
+                    this.times[1] -= 60;
+                }
+            }
+
+            // 將計時器數據顯示在界面上
+            print() {
+                this.display.innerText = this.format(this.times);
+            }
+
+            // 格式化計時器數據為小時:分鐘:秒.毫秒
+            format(times) {
+                return `${pad0(times[0], 2)}:${pad0(times[1], 2)}:${pad0(times[2], 2)}.${pad0(Math.floor(times[3] / 10), 2)}`; // 顯示小時
+            }
+        }
+
+        // 將數值轉換為固定位數的字符串，用0填充
+        function pad0(value, count) {
+            var result = value.toString();
+            for (; result.length < count; --count)
+                result = '0' + result;
+            return result;
+        }
+
+        // 創建一個 Stopwatch 實例，並將其與 DOM 中的 .stopwatch 元素關聯
+        let stopwatch = new Stopwatch(document.querySelector('.stopwatch'));
+
+        // 獲取開始/停止按鈕和重置按鈕的引用
+        let startStopButton = document.getElementById('startStopButton');
+        let resetButton = document.getElementById('resetButton');
+
+        // 定義按鈕狀態變量，0表示計時器停止，1表示計時器運行，2表示計時器已重置
+        let buttonState = 0;
+
+        // 切換開始/停止按鈕的函數
+        function toggleStartStop() {
+            if (buttonState === 0) { // 如果計時器停止
+                stopwatch.start(); // 開始計時器
+                startStopButton.innerText = "Stop"; // 更新按鈕文本為 "Stop"
+                buttonState = 1; // 設置按鈕狀態為運行
+                getcurrentTime(); // 獲取當前時間
+                getData = setInterval(getDataFromDatabase, 5000); // 開始定時從數據庫獲取數據
+            } else if (buttonState === 1) { // 如果計時器運行
+                stopwatch.stop(); // 停止計時器
+                startStopButton.innerText = "Reset"; // 更新按鈕文本為 "Reset"
+                buttonState = 2; // 設置按鈕狀態為重置
+                clearInterval(getData); // 清除定時器
+            } else if (buttonState === 2) { // 如果計時器已重置
+                stopwatch.reset(); // 重置計時器
+                stopwatch.print(); // 顯示計時器數據
+                startStopButton.innerText = "Start"; // 更新按鈕文本為 "Start"
+                buttonState = 0; // 設置按鈕狀態為停止
+                clearTable(); // 清空表格數據
+            }
+        }
+
+        // 重置計時器的函數
+        function resetStopwatch() {
+            stopwatch.reset(); // 重置計時器
+            stopwatch.print(); // 顯示計時器數據
+            if (buttonState === 1) { // 如果計時器正在運行
+                stopwatch.stop(); // 停止計時器
+                startStopButton.innerText = "Start"; // 更新按鈕文本為 "Start"
+            } else if (buttonState === 2) { // 如果計時器已重置
+                startStopButton.innerText = "Start"; // 更新按鈕文本為 "Start"
+                buttonState = 0; // 設置按鈕狀態為停止
+            }
+        }
+
+        // 解析後的數據和賽手 MAC 地址的陣列
+        var parsedData;
+        var racer_macAddr = [];
+        var racer_name = [];
+
+        // 獲取表格中的行
+        var tableRows = document.querySelectorAll("table tbody tr");
+        var thirdTd; // 第三列
+        var currentTime1; // 當前時間
+        var time1; // 時間戳記
+
+        // 使用 URL 查詢參數獲取變量的值
+        const urlParams = new URLSearchParams(window.location.search);
+        const variableValue = urlParams.get('variableName');
+
+        // 當頁面加載完成時執行的操作
+        window.onload = function () {
+            var retrievedData = localStorage.getItem("tableData");
+            parsedData = JSON.parse(retrievedData); // 解析本地存儲的表格數據
+            getRacerData(); // 獲取賽手數據
+            getcurrentTime(); // 獲取當前時間
+        };
+
+        // 從服務器端獲取賽手數據的函數
+        function getRacerData() {
+            fetch("/frontpage2/reloadRacerData?variable=" + variableValue) // 使用 fetch 函數從指定 URL 獲取賽手數據
+                .then(response => response.json()) // 解析服務器的響應為 JSON 格式
+                .then(RacerData => { // 當獲取成功時執行的函數
+                    for (var i = 0; i < RacerData.length; i++) { // 遍歷賽手數據
+                        racer_macAddr.push(RacerData[i].macAddr); // 將賽手的 MAC 地址添加到 racer_macAddr 陣列中
+                    }
+                })
+                .catch(error => { // 當獲取失敗時執行的函數
+                    console.error("Error reloading MQTT data:", error); // 輸出錯誤信息到控制台
+                });
+        }
+
+        // 從數據庫中獲取資料的函數
+        function getDataFromDatabase() {
+            fetch("/frontpage2/reloadMqttData?Time=" + currentTime1) // 使用 fetch 函數從指定 URL 獲取數據，並傳遞當前時間作為參數
+                .then(response => response.json()) // 解析服務器的響應為 JSON 格式
+                .then(lorawansData => { // 當獲取成功時執行的函數
+                    var racer_turns = []; // 存儲每個賽手的圈數
+                    var racer_pos = []; // 存儲每個賽手的位置
+                    var racer_Tflag = []; // 記錄每個賽手是否已開始
+                    var racer_flag_turn = []; // 記錄每個賽手是否已經通過終點
+                    var racer_startTime = []; // 記錄每個賽手的起始時間
+                    var racer_endTime = []; // 記錄每個賽手的結束時間
+                    for (var i = 0; i < racer_macAddr.length; i++) { // 初始化賽手相關數據
+                        racer_pos.push(0);
+                        racer_turns.push(0);
+                        racer_Tflag.push(0);
+                        racer_flag_turn.push(0);
+                        racer_startTime.push(0);
+                        racer_endTime.push(0);
+                    }
+                    for (var x = 0; x < racer_macAddr.length; x++) { // 循環處理每個賽手的數據
+                        for (var i = 0; i < lorawansData.length; i++) { // 遍歷所有從數據庫獲取的 MQTT 數據
+                            var time2 = new Date(lorawansData[i].get_time);
+                            if (time2 <= time1) continue; // 如果數據的時間早於當前時間，則忽略該數據
+                            var macAddr = lorawansData[i].macAddr; // 獲取數據的 MAC 地址
+                            var itemListLength = Object.keys(parsedData).length; // 獲取本地數據列表的長度
+                            if (macAddr == racer_macAddr[x]) { // 如果數據的 MAC 地址與賽手的 MAC 地址匹配
+                                if (!racer_Tflag[x]) { // 如果賽手尚未開始計時
+                                    racer_Tflag[x] = 1; // 設置賽手開始計時標記
+                                    racer_startTime[x] = lorawansData[i].get_time; // 記錄賽手的起始時間
+                                }
+                                var gwip = lorawansData[i].gwip; // 獲取數據的 GW IP 地址
+                                var rssi = lorawansData[i].rssi; // 獲取數據的 RSSI 值
+                                for (var j = 1; j < itemListLength + 1; j++) { // 遍歷本地數據列表
+                                    if (parsedData[j][1] == gwip) { // 如果數據的 GW IP 地址與本地數據列表中的相匹配
+                                        if (Math.abs(parsedData[j][3]) > Math.abs(rssi)) { // 如果 RSSI 值符合條件
+                                            if (parseInt(racer_pos[x]) + 1 == parsedData[j][0]) { // 如果賽手的位置加 1 等於下一個地點的位置
+                                                racer_pos[x]++; // 更新賽手的位置
+                                                if (racer_pos[x] == 1 && racer_flag_turn[x] == 1) { // 如果賽手從終點回到起點
+                                                    racer_turns[x]++; // 增加賽手的圈數
+                                                    racer_endTime[x] = lorawansData[i].get_time; // 記錄賽手的結束時間
+                                                }
+                                                if (racer_pos[x] == itemListLength) { // 如果賽手到達終點
+                                                    racer_pos[x] = 0; // 重置賽手的位置
+                                                    racer_flag_turn[x] = 1; // 設置賽手已經通過終點標記
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        TimeTd = tableRows[x].querySelector("td:nth-child(4)"); // 獲取表格中第四列的單元格
+                        var totalTime = calculateTimeDifference(currentTime1, racer_endTime[x]); // 計算賽手的總時間
+                        if (racer_turns[x] != 0) TimeTd.textContent = divideTime(totalTime, racer_turns[x]); // 更新表格中的總時間
+                        thirdTd = tableRows[x].querySelector("td:nth-child(3)"); // 獲取表格中第三列的單元格
+                        thirdTd.textContent = racer_turns[x]; // 更新表格中的圈數
+                    }
+                    sortTableBySecondColumn(); // 根據第二列的數據對表格進行排序
+                })
+                .catch(error => { // 當獲取失敗時執行的函數
+                    console.error("Error reloading MQTT data:", error); // 輸出錯誤信息到控制台
+                });
+        }
+
+        // 計算兩個時間之間的時間差
+        function calculateTimeDifference(startTime, endTime) {
+            // 將開始時間和結束時間轉換為 Date 對象
+            var start = new Date(startTime);
+            var end = new Date(endTime);
+
+            // 計算時間差（毫秒）
+            var diff = end - start;
+
+            // 計算時、分、秒
+            var hours = Math.floor(diff / (1000 * 60 * 60)); // 小時
+            var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)); // 分鐘
+            var seconds = Math.floor((diff % (1000 * 60)) / 1000); // 秒
+
+            // 格式化時間為 hh:mm:ss 格式
+            var formattedTime = pad(hours, 2) + ":" + pad(minutes, 2) + ":" + pad(seconds, 2);
+
+            return formattedTime; // 返回格式化後的時間字符串
+        }
+
+        // 將總時間除以一個除數，並返回新的時間
+        function divideTime(totalTime, divisor) {
+            // 將總時間拆分為時、分、秒
+            var parts = totalTime.split(':');
+            var hours = parseInt(parts[0], 10);
+            var minutes = parseInt(parts[1], 10);
+            var seconds = parseInt(parts[2], 10);
+
+            // 將時間轉換為毫秒
+            var totalMilliseconds = (hours * 3600 + minutes * 60 + seconds) * 1000;
+
+            // 將總時間按除數進行切分
+            var dividedMilliseconds = totalMilliseconds / divisor;
+
+            // 將切分後的毫秒數轉換為時、分、秒
+            var newHours = Math.floor(dividedMilliseconds / (1000 * 60 * 60));
+            var newMinutes = Math.floor((dividedMilliseconds % (1000 * 60 * 60)) / (1000 * 60));
+            var newSeconds = Math.floor((dividedMilliseconds % (1000 * 60)) / 1000);
+
+            // 格式化新的時間為 hh:mm:ss 格式
+            var formattedResult = pad(newHours, 2) + ":" + pad(newMinutes, 2) + ":" + pad(newSeconds, 2);
+
+            return formattedResult; // 返回新的時間
+        }
+
+        // 在數字前面添加零，使其達到指定的位數
+        function pad(num, size) {
+            var numString = num.toString(); // 將數字轉換為字符串
+            while (numString.length < size) {
+                numString = "0" + numString; // 在數字前面添加零
+            }
+            return numString; // 返回添加零後的字符串形式的數字
+        }
+
+        // 根據表格中的第二列的值（第四個td元素）對表格行進行排序
+        function sortTableBySecondColumn() {
+            var tableBody = document.querySelector("table tbody"); // 獲取表格主體元素
+            var rowsArray = Array.from(tableBody.querySelectorAll("tr")); // 獲取表格中所有行，並轉換為數組
+
+            // 使用排序函數對行進行排序
+            rowsArray.sort(function (a, b) {
+                var aValue = getTimeValue(a.querySelector("td:nth-child(4)").innerText); // 獲取第二列的值（時間值）
+                var bValue = getTimeValue(b.querySelector("td:nth-child(4)").innerText);
+
+                // 比較時間值
+                return aValue - bValue;
+            });
+
+            // 清空原來的 tbody 內容
+            tableBody.innerHTML = "";
+
+            // 將排序後的行添加回表格中
+            rowsArray.forEach(function (row) {
+                tableBody.appendChild(row);
+            });
+        }
+
+        // 將時間字符串轉換為毫秒表示的時間值
+        function getTimeValue(timeString) {
+            // 如果時間字符串為空，返回 Infinity，即無窮大，用於將空時間值排在最後
+            if (!timeString.trim()) return Infinity;
+
+            // 將時間字符串按冒號拆分為小時、分鐘和秒
+            var timeParts = timeString.split(":");
+            var hours = parseInt(timeParts[0]); // 小時
+            var minutes = parseInt(timeParts[1]); // 分鐘
+            var seconds = parseInt(timeParts[2]); // 秒
+
+            // 將時間轉換為毫秒並返回
+            return (hours * 3600 + minutes * 60 + seconds) * 1000;
+        }
+
+        // 獲取當前時間並格式化為字符串
+        function getcurrentTime() {
+            var currentTime = new Date();
+            var year = currentTime.getFullYear(); // 獲取年份
+            var month = currentTime.getMonth() + 1; // 獲取月份（月份從 0 開始，所以需要加 1）
+            var day = currentTime.getDate(); // 獲取日期
+            var hour = currentTime.getHours(); // 獲取小時
+            var minute = currentTime.getMinutes(); // 獲取分鐘
+            var second = currentTime.getSeconds(); // 獲取秒數
+
+            // 將年、月、日、時、分、秒拼接成字符串形式，並指定格式為 yyyy-mm-dd hh:mm:ss
+            currentTime1 = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second + '';
+
+            // 將格式化後的時間字符串轉換為 Date 對象，以便進行後續時間比較
+            time1 = new Date(currentTime1);
+        }
+
+        // 清空表格中的資料
+        function clearTable() {
+            for (var i = 0; i < racer_macAddr.length; i++) {
+                // 獲取表格行中第四個子元素（即時間）的元素
+                TimeTd = tableRows[i].querySelector("td:nth-child(4)");
+                // 清空時間元素的內容
+                TimeTd.textContent = "";
+
+                // 獲取表格行中第三個子元素（即圈數）的元素
+                thirdTd = tableRows[i].querySelector("td:nth-child(3)");
+                // 清空圈數元素的內容
+                thirdTd.textContent = "";
+            }
+        }
+
+        // 將賽事資訊儲存到後端
+        function SAVEDATA() {
+            var RacerInfo = [];
+
+            // 遍歷表格行，獲取每位選手的資訊並存入 RacerInfo 陣列中
+            for (var i = 0; i < tableRows.length; i++) {
+                var td_mac = tableRows[i].querySelector("td:nth-child(1)").innerText;
+                var td_name = tableRows[i].querySelector("td:nth-child(2)").innerText;
+                var td_turns = tableRows[i].querySelector("td:nth-child(3)").innerText;
+                var td_time = tableRows[i].querySelector("td:nth-child(4)").innerText;
+                RacerInfo[i] = { MAC: td_mac, Name: td_name, Turns: td_turns, Time: td_time, Race_ID: variableValue };
+            }
+
+            // 使用 fetch 函數向後端發送 POST 請求，將賽事資訊傳送到指定路徑
+            fetch('/frontpage2/postData', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(RacerInfo) // 將賽事資訊轉換為 JSON 格式並傳送到後端
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // 如果儲存成功，彈出提示訊息
+                        alert("儲存成功!");
+                    } else {
+                        // 如果儲存失敗，輸出錯誤訊息到控制台
+                        console.error('Failed to send data');
+                    }
+                })
+                .catch(error => {
+                    // 如果發生錯誤，輸出錯誤訊息到控制台
+                    console.error('Error:', error);
+                });
+        }
+
+        // 執行登出操作
+        function logout() {
+            // 向後端發送 GET 請求以執行登出操作
+            fetch("/login/logout", {
+                method: "GET"
+            })
+                .then(response => {
+                    console.log(response); // 检查响应对象
+
+                    // 如果收到重定向，則重定向到登入頁面
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        // 如果登出失敗，輸出錯誤訊息到控制台
+                        console.error("Logout failed");
+                    }
+                })
+                .catch(error => {
+                    // 如果發生錯誤，輸出錯誤訊息到控制台
+                    console.error("Error during logout:", error);
+                });
+        }
+    </script>
+</body>
+
+</html>

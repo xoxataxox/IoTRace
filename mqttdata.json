@@ -1,0 +1,12 @@
+{
+    "protocol": "MQTT",
+    "mqtt_ack": "off",
+    "hostname": "",
+    "qos": "1",
+    "username": "",
+    "password": "",
+    "publish_topic": "Test-GW/DL/",
+    "Subscribe_topic": "Test-GW/UL/#",
+    "downlink_ack": "Test-GW/DL-report/",
+    "port": "1883"
+}

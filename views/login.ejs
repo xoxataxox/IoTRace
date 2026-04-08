@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>賽事計時系統</title>
+<style>
+body {
+    font-family: sans-serif; /* 使用 sans-serif 字體 */
+    margin: 0; /* 頁面邊距設置為0 */
+    padding: 0; /* 頁面內容邊距設置為0 */
+    background-color: #D9D9D9; /* 背景顏色設置為淺灰色 */
+}
+
+.container {
+    display: flex; /* 使用 Flexbox 進行排列 */
+    flex-direction: column; /* 垂直排列子元素 */
+    align-items: center; /* 元素水平居中對齊 */
+    justify-content: center; /* 元素垂直居中對齊 */
+    height: 100vh; /* 容器高度設置為視窗高度 */
+    width: 100%; /* 容器寬度設置為100% */
+    background-color: #D9D9D9; /* 背景顏色設置為淺灰色 */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* 添加陰影效果 */
+}
+
+h1 {
+    font-size: 2rem; /* 標題字體大小 */
+    color: #333; /* 標題文字顏色 */
+    margin-bottom: 1rem; /* 與下方元素的間距 */
+}
+
+img {
+    width: 100px; /* 圖片寬度 */
+    margin-bottom: 2rem; /* 與下方元素的間距 */
+}
+
+form {
+    display: flex; /* 使用 Flexbox 進行排列 */
+    flex-direction: column; /* 垂直排列子元素 */
+    align-items: center; /* 元素水平居中對齊 */
+    width: 80%; /* 表單寬度設置為80% */
+}
+
+label {
+    font-size: 20px; /* 標籤字體大小 */
+    color: #333; /* 標籤文字顏色 */
+    margin-bottom: 0.5rem; /* 與下方元素的間距 */
+    text-align: left; /* 文字左對齊 */
+    width: 20%; /* 標籤寬度設置為20% */
+    display: inline-block; /* 設置為行內元素 */
+}
+
+.form-group {
+    display: flex; /* 使用 Flexbox 進行排列 */
+}
+
+input[type="text"],
+input[type="password"] {
+    border: 1px solid #ccc; /* 輸入框邊框樣式 */
+    border-radius: 4px; /* 輸入框圓角 */
+    font-size: 20px; /* 字體大小 */
+    padding: 0.5rem; /* 內容與邊框的間距 */
+    width: 300px; /* 輸入框寬度 */
+    box-sizing: border-box; /* 內容包含邊框 */
+    margin-bottom: 1rem; /* 與下方元素的間距 */
+}
+
+input[type="submit"] {
+    background-color: black; /* 按鈕背景顏色 */
+    color: #ffe600; /* 按鈕文字顏色 */
+    border: none; /* 去除邊框 */
+    border-radius: 30px; /* 圓形邊角 */
+    font-size: 1.1rem; /* 按鈕字體大小 */
+    padding: 0.5rem; /* 內容與邊框的間距 */
+    cursor: pointer; /* 鼠標樣式設置為手指 */
+    width: 70px; /* 按鈕寬度 */
+}
+
+input[type="submit"]:hover {
+    background-color: #ffe600; /* 鼠標懸停時的背景顏色 */
+    color: black; /* 鼠標懸停時的文字顏色 */
+}
+
+.error-message {
+    color: red; /* 錯誤消息的文字顏色設置為紅色 */
+    margin-top: 0.5rem; /* 與上方元素的間距 */
+}
+
+</style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>賽事計時系統</h1> <!-- 標題 -->
+        <form action="/login" method="post"> <!-- 登錄表單 -->
+            <div class="form-group">
+                <label for="username">帳號</label> <!-- 使用者名稱標籤 -->
+                <input type="text" id="username" name="username" required> <!-- 使用者名稱輸入框 -->
+            </div>
+            <br> <!-- 換行 -->
+            <div class="form-group">
+                <label for="password">密碼</label> <!-- 密碼標籤 -->
+                <input type="password" id="password" name="password" required> <!-- 密碼輸入框 -->
+            </div>
+            <br> <!-- 換行 -->
+            <input type="submit" value="登入"> <!-- 提交按鈕 -->
+            <% if (error) { %> <!-- 如果有錯誤消息 -->
+                <p class="error-message">
+                    <%= error %> <!-- 顯示錯誤消息 -->
+                </p>
+            <% } %>
+        </form>
+    </div>
+</body>
+</html>
